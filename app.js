@@ -1,7 +1,6 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
-
 var app = express();
 
 
@@ -11,6 +10,23 @@ app.use(bodyParser.urlencoded({extended:true})); //support encoded bodies
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+/* If you want to use a page from a specific folder
+
+app.get('/', function (req, res) {
+    res.type("text/html");
+    res.sendfile("./public/home.html");
+});
+*/
+
+/* If you want to send back something when the user types in a specific URL
+
+app.get('/about', function (req,res){
+    res.type("text/html");
+    res.send("About page");
+}
+*/
+
+//This will render a template you have made
 app.get('/', function (req, res) {
     res.render('home');
 });
@@ -20,9 +36,9 @@ app.get('/about', function (req, res) {
 });
 
 var events = [
-    {what:"finish homework"},
-    {what:"study"},
-    {what:"get groceries"}
+    {what:"finish homework",time:"3pm"},
+    {what:"study",time:"5pm"},
+    {what:"get groceries",time:"7pm"}
     ];
     
 app.post("/search", function(req,res){
@@ -32,7 +48,7 @@ app.post("/search", function(req,res){
         return item.what == req.body.search_term;
     });
     if(found){
-        res.send(header + "Event: " + found.what);
+        res.send(header + "Event: " + found.what + "\nTime: " + found.time);
     }else{
         res.send(header + "not found");
     }
