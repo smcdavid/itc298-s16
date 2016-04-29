@@ -1,7 +1,7 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
-var methods = require('./lib/methods.js');
+//var methods = require('./lib/methods.js');
 var app = express();
 
 
@@ -36,65 +36,80 @@ app.get('/about', function (req, res) {
     res.render('about');
 });
 
+var events = [
+    {what:"finish homework",time:"3pm"},
+    {what:"study",time:"5pm"},
+    {what:"get groceries",time:"7pm"}
+    ];
+
 app.post("/search", function(req,res){
     res.type("text/html");
-    var header = "Searching for: " + req.body.search_term + "<br>";
+    var header = "Searching for: " + req.body.event + "<br>";
     var found = events.find(function(item){
-        return item.what == req.body.search_term;
+        return item.what == req.body.event;
     });
     if(found){
-        res.send(header + "Event: " + found.what + "<br>Time: " + found.time);
+        res.send(header + "Event: " + found.what + "<br>Time: " + found.time + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + "not found");
+        res.send(header + "not found" + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
 });
 
 app.post("/add", function(req,res){
     res.type("text/html");
-    var object = {what:req.body.add_event, time:req.body.add_time};
-    var header = "Checking for: " + req.body.add_event + "<br>";
+    var object = {what:req.body.event, time:req.body.time};
+    var header = "Checking for: " + req.body.event + "<br>";
     var found = events.find(function(item){
-        return item.what == req.body.add_event;
+        return item.what == req.body.event;
     });
     if(found){
-        res.send(header + "Sorry " + found.what + " is already an event, please pick a different event name " + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
+        res.send(header + "Sorry " + found.what + " is already an event, please pick a different event name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + " event added " + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
+        res.send(header + " event added " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
         events.push(object);
     }
 });
 
 app.post("/remove", function(req,res){
     res.type("text/html");
-    var header = "Checking for: " + req.body.remove_event + "<br>";
+    var header = "Checking for: " + req.body.event + "<br>";
+    var a = 0;
     var found = events.find(function(item){
-        return item.what == req.body.remove_event;
+        return item.what == req.body.event;
     });
     if(found){
-        res.send(header + "Event " + found.what + " was removed " + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
-        for(var i=0; events;i++){
-            
-            if(match){
-            events.splice(i,1)
+        for(var i in events){
+            if(i.what == req.body.event){
+            events.splice(a,1);
+            } else {
+                a++;
             }
         }
+        res.send(header + "Event " + found.what + " was removed " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
+        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
 });
 
 app.post("/change", function(req,res){
     res.type("text/html");
-    var header = "Checking for: " + req.body.current_event + "<br>";
+    var header = "Checking for: " + req.body.event + "<br>";
+    var a = 0;
     var found = events.find(function(item){
-        return item.what == req.body.current_event;
+        return item.what == req.body.event;
     });
     if(found){
         //code that will change found.time
-        
-        res.send(header + "Event " + found.what + "'s time was changed to " + found.time + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
+        for(var i in events){
+            if(i.what == req.body.event){
+            events.splice(a,1,req.body.time);
+            } else {
+                a++;
+            }
+        }
+        res.send(header + "Event " + found.what + "'s time was changed to " + found.time + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io">Go Back</a>');
+        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
 });
 

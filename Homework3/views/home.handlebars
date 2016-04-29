@@ -1,24 +1,23 @@
 <h1>Welcome!</h1>
 <h2>This will be my time keeping/managment site!</h2>
 <h3>What event are you looking for?</h3>
-<form method="POST" action="/search">
-    <input type="text" placeholder="Name of Event" name="search_term" title="submit">
-    <button>Search</button>
+
+<form method="POST" action="">
+    <input type="text" placeholder="Name of Event" name="event" title="submit">
+    <input type="text" placeholder="Time of Event" name="time" title="submit">
+    <button id="search">Search</button>
+    <button id="add">Add</button>
+    <button id="remove">Delete</button>
+    <button id="change">Update</button>
 </form>
-<h3>Would you like to add an event?</h3>
-<form method="POST" action="/add">
-    <input type="text" placeholder="Event" name="add_event" title="submit">
-    <input type="text" placeholder="Time" name="add_time" title="submit">
-    <button>Add Event</button>
-</form>
-<h3>Would you like to remove an event?</h3>
-<form method="POST" action="/remove">
-    <input type="text" placeholder="Remove Event" name="remove_event" title="submit">
-    <button>Add Event</button>
-</form>
-<h3>Would you like to update an event?</h3>
-<form method="POST" action="/change">
-    <input type="text" placeholder="Event" name="current_event" title="submit">
-    <input type="text" placeholder="New Time" name="changed_time" title="submit">
-    <button>Add Event</button>
-</form>
+
+<script>
+    $(document).ready(function(){
+        var buttons = $("button");
+        
+        buttons.on("click", function(){
+            $("form").attr("action", "/" + $(this).attr("id"));
+        });
+    });
+
+</script>
