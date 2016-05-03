@@ -1,7 +1,7 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
-//var methods = require('./lib/methods.js');
+var methods = require('./lib/methods.js');
 var app = express();
 
 
@@ -29,23 +29,23 @@ app.get('/about', function (req,res){
 
 //This will render a template you have made
 app.get('/', function (req, res) {
-    res.render('home');
+    res.render('home',{ methods: methods.getEvent() });
 });
 
 app.get('/about', function (req, res) {
     res.render('about');
 });
 
-var events = [
+/*var events = [
     {what:"finish homework",time:"3pm"},
     {what:"study",time:"5pm"},
     {what:"get groceries",time:"7pm"}
-    ];
+    ];*/
 
 app.post("/search", function(req,res){
     res.type("text/html");
     var header = "Searching for: " + req.body.event + "<br>";
-    var found = events.find(function(item){
+    var found = methods.getEvent().find(function(item){
         return item.what == req.body.event;
     });
     if(found){
@@ -59,14 +59,14 @@ app.post("/add", function(req,res){
     res.type("text/html");
     var object = {what:req.body.event, time:req.body.time};
     var header = "Checking for: " + req.body.event + "<br>";
-    var found = events.find(function(item){
+    var found = methods.getEvent().find(function(item){
         return item.what == req.body.event;
     });
     if(found){
         res.send(header + "Sorry " + found.what + " is already an event, please pick a different event name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
         res.send(header + " event added " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-        events.push(object);
+        methods.getEvent().push(object);
     }
 });
 
@@ -74,7 +74,7 @@ app.post("/remove", function(req,res){
     res.type("text/html");
     var header = "Checking for: " + req.body.event + "<br>";
     var a = 0;
-    var found = events.find(function(item){
+    var found = methods.getEvent().find(function(item){
         return item.what == req.body.event;
     });
     if(found){
@@ -95,7 +95,7 @@ app.post("/change", function(req,res){
     res.type("text/html");
     var header = "Checking for: " + req.body.event + "<br>";
     var a = 0;
-    var found = events.find(function(item){
+    var found = methods.getEvent().find(function(item){
         return item.what == req.body.event;
     });
     if(found){
