@@ -1,7 +1,7 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
-var methods = require('./lib/methods.js');
+var event = require('../lib/methods');
 var app = express();
 
 
@@ -29,27 +29,24 @@ app.get('/about', function (req,res){
 
 //This will render a template you have made
 app.get('/', function (req, res) {
-    res.render('home',{ methods: methods.getEvent() });
+    res.render('home');
 });
 
 app.get('/about', function (req, res) {
     res.render('about');
 });
 
-/*var events = [
-    {what:"finish homework",time:"3pm"},
-    {what:"study",time:"5pm"},
-    {what:"get groceries",time:"7pm"}
-    ];*/
+/*app.get('/detail', function(req,res){
+    res.render('detail');
+});*/
+
 
 app.post("/search", function(req,res){
     res.type("text/html");
-    var header = "Searching for: " + req.body.event + "<br>";
-    var found = methods.getEvent().find(function(item){
-        return item.what == req.body.event;
-    });
+    var header = "Searching for: " + req.body.what + "<br>";
+    var found = event.findEvent(req.body.what);
     if(found){
-        res.send(header + "Event: " + found.what + "<br>Time: " + found.time + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+        res.send(header + "Event found" + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
         res.send(header + "not found" + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
@@ -57,61 +54,26 @@ app.post("/search", function(req,res){
 
 app.post("/add", function(req,res){
     res.type("text/html");
-    var object = {what:req.body.event, time:req.body.time};
-    var header = "Checking for: " + req.body.event + "<br>";
-    var found = methods.getEvent().find(function(item){
-        return item.what == req.body.event;
-    });
-    if(found){
-        res.send(header + "Sorry " + found.what + " is already an event, please pick a different event name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+    var object = {"what":req.body.what, "time":req.body.time};
+    var found = event.add(req.body.what);
+    if(found.added){
+        res.send("Event added " + req.body.what + "<br>New event total: " + found.length + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + " event added " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-        methods.getEvent().push(object);
+        
+        res.send("Updated " + req.body.what + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
 });
 
 app.post("/remove", function(req,res){
     res.type("text/html");
-    var header = "Checking for: " + req.body.event + "<br>";
-    var a = 0;
-    var found = methods.getEvent().find(function(item){
-        return item.what == req.body.event;
-    });
-    if(found){
-        for(var i in events){
-            if(i.what == req.body.event){
-            events.splice(a,1);
-            } else {
-                a++;
-            }
-        }
-        res.send(header + "Event " + found.what + " was removed " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+    var found = event.remove(req.body.what);
+    if(found.removed){
+        res.send("Removed " + req.body.what + " was removed " + "<br> New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
-        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+        res.send("there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
 });
 
-app.post("/change", function(req,res){
-    res.type("text/html");
-    var header = "Checking for: " + req.body.event + "<br>";
-    var a = 0;
-    var found = methods.getEvent().find(function(item){
-        return item.what == req.body.event;
-    });
-    if(found){
-        //code that will change found.time
-        for(var i in events){
-            if(i.what == req.body.event){
-            events.splice(a,1,req.body.time);
-            } else {
-                a++;
-            }
-        }
-        res.send(header + "Event " + found.what + "'s time was changed to " + found.time + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }else{
-        res.send(header + " there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }
-});
 
 // POST https://itc298-s16-smcdavid.c9users.io/
 // parameters sent with 

@@ -2,21 +2,22 @@
 <h2>This will be my time keeping/managment site!</h2>
 <h3>What event are you looking for?</h3>
 
-<form method="POST" action="">
-    <input type="text" placeholder="Name of Event" name="event" title="submit">
-    <input type="text" placeholder="Time of Event" name="time" title="submit">
-    <button id="search">Search</button>
-    <button id="add">Add</button>
-    <button id="remove">Delete</button>
-    <button id="change">Update</button>
+<form method="POST" action="/search">
+    <input type="text" name="what" placeholder="Name of Event" >
+    <input type="text" name="time" placeholder="Time of Event" >
+    <button>Search</button>
+    <button>Add</button>
+    <button>Remove</button>
+    
 </form>
 
 <script>
-    $(document).ready(function(){
-        var buttons = $("button");
+        $(document).ready(function(){
+        var buttons = $('button');
         
-        buttons.on("click", function(){
-            $("form").attr("action", "/" + $(this).attr("id"));
+        buttons.on('click', function() {
+            var $this = $(this);
+            $("form").attr("action", $this.text().toLowerCase());
         });
     });
 
