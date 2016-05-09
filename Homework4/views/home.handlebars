@@ -1,0 +1,24 @@
+<h1>Welcome!</h1>
+<h2>This will be my time keeping/managment site!</h2>
+<h3>What event are you looking for?</h3>
+
+<form method="POST" action="/search">
+    <input type="text" name="what" placeholder="Name of Event" >
+    <input type="text" name="time" placeholder="Time of Event" >
+    <button>Search</button>
+    <button>Add</button>
+    <button>Remove</button>
+    
+</form>
+
+<script>
+        $(document).ready(function(){
+        var buttons = $('button');
+        
+        buttons.on('click', function() {
+            var $this = $(this);
+            $("form").attr("action", $this.text().toLowerCase());
+        });
+    });
+
+</script>

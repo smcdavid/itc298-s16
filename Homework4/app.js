@@ -29,7 +29,17 @@ app.get('/about', function (req,res){
 
 //This will render a template you have made
 app.get('/', function (req, res) {
-    res.render('home');
+    res.render('home', {events: event.getAll()} );
+});
+
+app.get('/detail/:what', function(req,res){
+    res.type('text/html');
+    var found = event.findEvent(req.params.what);
+    if (!found) {
+        // note - new lead has no ID yet
+        found = {what: req.params.what};
+    }
+    res.render('detail', {event: found} );    
 });
 
 app.get('/about', function (req, res) {
@@ -45,33 +55,23 @@ app.post("/search", function(req,res){
     res.type("text/html");
     var header = "Searching for: " + req.body.what + "<br>";
     var found = event.findEvent(req.body.what);
-    if(found){
-        res.send(header + "Event found" + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }else{
-        res.send(header + "not found" + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+    if (!found) {
+        found = {what: req.body.what};
     }
+    res.render('detail', {event: found} );    
 });
 
 app.post("/add", function(req,res){
     res.type("text/html");
-    var object = {"what":req.body.what, "time":req.body.time};
-    var found = event.add(object);
-    if(found.added){
-        res.send("Event added " + req.body.what + "<br>New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }else{
-        
-        res.send("Updated " + req.body.what + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }
+   var newEvent = {"what":req.body.what, "where":req.body.where, "time":req.body.time, "when":req.body.when}
+    var result = event.add(newEvent);
+    res.render('detail', {event: newEvent, result: result} );    
 });
 
 app.post("/remove", function(req,res){
     res.type("text/html");
-    var found = event.remove(req.body.what);
-    if(found.removed){
-        res.send("Removed " + req.body.what + "<br> New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }else{
-        res.send("there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
-    }
+    var result = event.remove(req.body.what);
+    res.render('detail', {result: result} );
 });
 
 

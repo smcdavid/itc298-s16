@@ -55,9 +55,9 @@ app.post("/search", function(req,res){
 app.post("/add", function(req,res){
     res.type("text/html");
     var object = {"what":req.body.what, "time":req.body.time};
-    var found = event.add(req.body.what);
+    var found = event.add(object);
     if(found.added){
-        res.send("Event added " + req.body.what + "<br>New event total: " + found.length + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+        res.send("Event added " + req.body.what + "<br>New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
         
         res.send("Updated " + req.body.what + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
@@ -68,7 +68,7 @@ app.post("/remove", function(req,res){
     res.type("text/html");
     var found = event.remove(req.body.what);
     if(found.removed){
-        res.send("Removed " + req.body.what + " was removed " + "<br> New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
+        res.send("Removed " + req.body.what + "<br> New event total: " + found.total + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }else{
         res.send("there is no event with that name " + '<a href="https://itc298-s16-smcdavid.c9users.io"> Go Back</a>');
     }
