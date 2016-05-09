@@ -36,7 +36,6 @@ app.get('/detail/:what', function(req,res){
     res.type('text/html');
     var found = event.findEvent(req.params.what);
     if (!found) {
-        // note - new lead has no ID yet
         found = {what: req.params.what};
     }
     res.render('detail', {event: found} );    
@@ -45,10 +44,6 @@ app.get('/detail/:what', function(req,res){
 app.get('/about', function (req, res) {
     res.render('about');
 });
-
-/*app.get('/detail', function(req,res){
-    res.render('detail');
-});*/
 
 
 app.post("/search", function(req,res){
