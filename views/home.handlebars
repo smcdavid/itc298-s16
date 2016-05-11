@@ -11,6 +11,15 @@
     
 </form>
 
+<ul>
+  {{#each event}}
+    <li>{{what}}</li>
+    <li>{{where}}</li>
+    <li>{{time}}</li>
+    <li>{{when}}</li>
+  {{/each}}
+</ul>
+
 <script>
         $(document).ready(function(){
         var buttons = $('button');
