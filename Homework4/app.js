@@ -29,6 +29,7 @@ app.get('/about', function (req,res){
 
 //This will render a template you have made
 app.get('/', function (req, res) {
+    res.type('text/html');
     res.render('home', {events: event.getAll()} );
 });
 
@@ -42,13 +43,13 @@ app.get('/detail/:what', function(req,res){
 });
 
 app.get('/about', function (req, res) {
+    res.type('text/html');
     res.render('about');
 });
 
 
 app.post("/search", function(req,res){
     res.type("text/html");
-    var header = "Searching for: " + req.body.what + "<br>";
     var found = event.findEvent(req.body.what);
     if (!found) {
         found = {what: req.body.what};
@@ -58,7 +59,7 @@ app.post("/search", function(req,res){
 
 app.post("/add", function(req,res){
     res.type("text/html");
-   var newEvent = {"what":req.body.what, "where":req.body.where, "time":req.body.time, "when":req.body.when}
+    var newEvent = {"what":req.body.what, "where":req.body.where, "time":req.body.time, "when":req.body.when}
     var result = event.add(newEvent);
     res.render('detail', {event: newEvent, result: result} );    
 });
