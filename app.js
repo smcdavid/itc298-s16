@@ -8,7 +8,20 @@ app.use(bodyParser.json()); //support json encoded bodies
 app.use(bodyParser.urlencoded({extended:true})); //support encoded bodies
 app.use('/api', require('cors')());
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main',
+    helpers:{
+         shortDate: function (date) {
+
+           var month = (date.getMonth() < 10) ? '0' + date.getMonth() : date.getMonth();
+
+           var day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+
+           return date.getFullYear() + "-" + month + "-" + day;
+
+       },
+    }
+}));
 app.set('view engine', 'handlebars');
 
 var routes = require("./lib/routes")(app);
