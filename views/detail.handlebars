@@ -1,7 +1,11 @@
 {{#if result.action}}
 <h2>{{result.action}} - {{event.what}}</h2>
 {{else if event.what}}
+    {{#if lead.id}}
     <h2>Edit - {{event.what}}</h2>
+    {{else}}
+     <h2>Add new - {{event.what}}</h2>
+    {{/if}}
 {{/if}}
 
 {{#if event.what}}
@@ -11,7 +15,7 @@
     <input type="text" name="time" placeholder="time" value="{{event.time}}" >
     <input type="date" name="when" placeholder="date"  value="{{shortDate event.when}}">
 
-    <button>{{#if event.what}}Update{{else}}Add{{/if}}</button>
+    <button>{{#if event.id}}Update{{else}}Add{{/if}}</button>
     <button>Remove</button>
 </form>
 {{/if}}

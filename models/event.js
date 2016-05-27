@@ -9,6 +9,7 @@ var conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));  
 
 var eventSchema = mongoose.Schema({
+    id: Number,
     what: String,
     where: String,
     time: String,

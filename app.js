@@ -11,15 +11,16 @@ app.use('/api', require('cors')());
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers:{
-         shortDate: function (date) {
+        shortDate: function (date) {
+            console.log(date);
+            if (typeof date == "string") { date = new Date(date); }
+            var month = (date.getMonth() < 9) ? '0' + (date.getMonth()+1) : date.getMonth()+1;
 
-           var month = (date.getMonth() < 10) ? '0' + date.getMonth() : date.getMonth();
+            var day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
 
-           var day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
 
-           return date.getFullYear() + "-" + month + "-" + day;
-
-       },
+        },
     }
 }));
 app.set('view engine', 'handlebars');
