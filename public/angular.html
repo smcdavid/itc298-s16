@@ -34,6 +34,18 @@
           console.log('Error: ' + response.data);
         });
       };
+      $scope.removeEvent = function() { 
+            $http.post('/api/remove', $scope.event)
+            .then(function successCallback(response) {
+                var newList = $scope.events.filter(function(event) {
+                  return event._id != $scope.event._id;
+                });
+                $scope.events = newList;
+                $scope.event = {};
+            }, function errorCallback(response) {
+              console.log('Error: ' + response.data);
+            });
+           };
     });
 </script>
 <body ng-app="eventsApp">
@@ -68,6 +80,7 @@
     <input type="date" placeholder="when" ng-model="event.when">
     <input type="hidden" name="id">
     <br><button ng-click="saveEvent()">Save</button></p>
+    <br><button ng-click="removeEvent()">Remove</button></p>
   </span> 
   </form>
 </div>
