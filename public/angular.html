@@ -1,56 +1,75 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-    
-<style>
-ul li {
-    cursor:pointer;
-    border:black 2px solid;
-    background:lightblue;
-    width:125px;
-    list-style-type:none;
-    text-align:center;
-    margin-bottom:5px;
-} 
-
-li p{
-    display:none;
-}
-
-</style>
-
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script>
-var listApp = angular.module('listApp',[]);
-listApp.controller('ListController', ['$scope', function($scope) {
-$scope.events = [
-    {what:'finish homework', where:'home', time:'3pm', when:'5/8/2016'},
-    {what:'study', where:'home', time:'5pm', when:'5/9/2016'},
-    {what:'get groceries', where:'store', time:'7pm', when:'5/7/2016'} 
-    ];
-//display "other" information or display the rest of the object? how the f do I do that?
-$scope.showDetail = function(event){
-    $scope.detail = "Event: " + event.what + " Where: " + event.where + " When: " + event.time + " Date: " + event.when;
-} ;   
+    var eventsApp = angular.module('eventsApp',[]);
+    eventsApp.controller('EventsController', function($scope, $http) {
+      
+    $http.get('/api/events')
+      .then(function successCallback(response) {
+            $scope.events = response.data;
+      }, function errorCallback(response) {
+        console.log('Error: ' + response.data);
+      });
+  
+    $scope.hideform = true;
 
-}]);
+      $scope.showDetail = function(item) { 
+        $scope.add = false;
+        $scope.hideform = (item == $scope.event) ? !$scope.hideform : false; 
+        $scope.event = item;
+        $scope.when = new Date($scope.event.when);
+      };
+      
+      $scope.newEvent = function() { 
+        $scope.add = true;
+        $scope.hideform = false; 
+        $scope.event = {};
+      };
+      $scope.saveEvent = function() { 
+        $http.post('/api/add', $scope.event)
+        .then(function successCallback(response) {
+            $scope.post_result = response.data;
+        }, function errorCallback(response) {
+          console.log('Error: ' + response.data);
+        });
+      };
+    });
 </script>
-</head>
-<!--View template. Add necessary Angular directives -->
-<body ng-app="listApp">
-<div ng-controller="ListController">
-    
-<p>Search : <input type="text" ng-model="search"></p>
-<p>{{search}}</p>
+<body ng-app="eventsApp">
+<div ng-controller="EventsController">
+ 	<p>Search : <input type="text" ng-model="name"></p>
+ 	<span>Searching for: {{name}}</span>
+ 	<table>
+ 	    <tr>
+ 	        <th>What</th>
+ 	        <th>Where</th>
+ 	        <th>Time</th>
+ 	        <th>When</th>
+ 	    </tr>
+  <tr ng-repeat="event in events | orderBy : 'what'">
+    <td><a ng-click="showDetail(event)">{{ event.what }}</a></td>
+    <td>{{ event.where }}</td>
+    <td>{{ event.time }}</td>
+    <td>{{ event.when | date : 'yyyy-MM-dd' }}</td>
+  </tr>
+</table>
+  <b>Total: {{events.length}}</b>
+  <p><button ng-click="newEvent()">New</button></p>
+  <hr>
 
-<b>Total: {{events.length}}</b>
-
-    <ul>
-        <li ng-repeat="event in events" ng-click="showDetail(event)">{{event.what}}</li>
-    </ul>
-
-<p>{{detail}}</p>
-
+<form ng-hide="hideform">
+  <h3 ng-show="add">Add New Item:</h3>
+  <h3 ng-hide="add">Edit Item:</h3>
+  <h3 ng-bind="post_result"></h3>
+    <input type="text" placeholder="what" ng-model="event.what">
+    <input type="text" placeholder="where" ng-model="event.where">
+    <input type="text" placeholder="time" ng-model="event.time">
+    <input type="date" placeholder="when" ng-model="event.when">
+    <input type="hidden" name="id">
+    <br><button ng-click="saveEvent()">Save</button></p>
+  </span> 
+  </form>
 </div>
 </body>
 </html>

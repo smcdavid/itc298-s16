@@ -14,6 +14,7 @@ app.engine('handlebars', exphbs({
         shortDate: function (date) {
             console.log(date);
             if (typeof date == "string") { date = new Date(date); }
+            if (!date) {date = new Date(); }
             var month = (date.getMonth() < 9) ? '0' + (date.getMonth()+1) : date.getMonth()+1;
 
             var day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
