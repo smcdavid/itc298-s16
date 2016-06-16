@@ -18,7 +18,7 @@
         $scope.add = false;
         $scope.hideform = (item == $scope.event) ? !$scope.hideform : false; 
         $scope.event = item;
-        $scope.when = new Date($scope.event.when);
+        $scope.event.when = new Date($scope.event.when);
       };
       
       $scope.newEvent = function() { 
